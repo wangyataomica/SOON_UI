@@ -20,7 +20,7 @@
         $window.location.href = url;
     }
 
-    angular.module('soonNav',[])
+    angular.module('ovSoonNav',[])
         .controller('OvSoonNavCtrl',
             ['$log','$scope',function(_$log_,_$scope_){
                 $log = _$log_;
