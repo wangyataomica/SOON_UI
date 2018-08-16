@@ -33,17 +33,14 @@
             width:400,
             height:1600,
         },
+        soonView = 'alarm',
         propOrder = ['level','alarmSource','NEType','location','timeOccur','timeClear','timeConfirm','platformAlarm'],
-        settingContentItem=['name','levelShow','probabilityThreshold','modelType','modelPara'],
+        settingContentItem=['name','levelShow','regionShow'],
         levelShow:['urgent','important','secondary','prompt'],
         defaultSetting = {
             name:'default',
-            levelShow:['urgent','important','secondary','prompt'],
-            probabilityThreshold:0.95,
-            modelType:'ANN',
-            modelPara:{
-
-            },
+            levelShow:[true,true,true,true],
+            regionShow: 'all',
         },
         setting = {};
         modelPara = {};
@@ -204,7 +201,7 @@
         form = content.append('form').classed('para-form',true);
 
         ANNPara.foreach(function(para){
-            form.text(para+':').append('input').attr('type','text').classed('para-input',true).attr('id',para).append('br');
+            form.text(para+':').append('input').attr('type','text').classed('para-input',true).attr('id',soonView+para).append('br');
         })
         return content;
     }
@@ -280,19 +277,22 @@
 
     function addSettingItem(form,item){
             if(item === 'name'){
-                form.append('label').text(item+':').append('input').attr('id','name').attr('type','text');
+                form.append('label').text(item+':').append('input').attr('id',soonView+'name').attr('type','text');
             }
             if(item === 'levelShow'){
                 var input = form.append('label').text(item+':');
                 for(var i=0;i<4;i++){
-                    input.append('input').attr('id',levelShow[i]).attr('type','checkbox').text(levelShow[i]);
+                    input.append('input').attr('id',soonView+levelShow[i]).attr('type','checkbox').text(levelShow[i]);
                 }
             }
+            if(item === 'regionShow'){
+                form.append('label').text(item+':'),append('input').attr('id',soonView+'regionShow').attr('type','text');
+            }
             if(item === 'probabilityThreshold'){
-                form.append('label').text(item+':').append('input')..attr('id','probabilityThreshold').attr('type','text');
+                form.append('label').text(item+':').append('input')..attr('id',soonView+'probabilityThreshold').attr('type','text');
             }
             if(item === 'modelType'){
-                var select = form.append('label').text(item+':').append('select').attr('id','modelType');
+                var select = form.append('label').text(item+':').append('select').attr('id',soonView+'modelType');
                 select.append('option').attr('value','ANN').text('ANN');
                 select.append('option').attr('value','CNN').text('CNN');
             }
@@ -325,27 +325,27 @@
             settingGet = defaultSetting;
         }else{
         settingGet = $cookiesStore.get(item);
-        $('#name').attr('value',settingGet[name]);
-        $('#probabilityThreshold').attr('value',settingGet[probabilityThreshold]);
-        $('#modelType option[value=settingGet.modelType]').attr('selected',true);
-        $('#NNIL').attr('value',settingGet.modelPara.NNIL);
-        $('#NNOL').attr('value',settingGet.modelPara.NNOL);
-        $('#NHL').attr('value',settingGet.modelPara.NHL);
-        $('#learningRate').attr('value',settingGet.modelPara.learningRate);
+        $('#alarmname').attr('value',settingGet[name]);
+        $('#alarmprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
+        $('#alarmmodelType option[value=settingGet.modelType]').attr('selected',true);
+        $('#alarmNNIL').attr('value',settingGet.modelPara.NNIL);
+        $('#alarmNNOL').attr('value',settingGet.modelPara.NNOL);
+        $('#alarmNHL').attr('value',settingGet.modelPara.NHL);
+        $('#alarmlearningRate').attr('value',settingGet.modelPara.learningRate);
     }}
 
     function showLevelShowSetting(settingGet){
         if(settingGet.levelShow[0]){
-            $('#urgent').attr('checked');
+            $('#alarmurgent').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#important').attr('checked');
+            $('#alarmimportant').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#secondary').attr('checked');
+            $('#alarmsecondary').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#prompt').attr('checked');
+            $('#alarmprompt').attr('checked');
         }
     }
 
