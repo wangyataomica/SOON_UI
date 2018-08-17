@@ -98,4 +98,27 @@
 
 #alarmPre-setting-panel .container div.setting-content label  {
 	width: 100px;
+	text-align:right;
+}
+
+#alarmPre-setting-panel .container div.setting-footer{
+	margin-top:420px;
+	height: 40px;
+	padding:10px,3px;
+}
+
+#alarmPre-setting-panel .container div.setting-footer button {
+	background-color: #518ecc;
+	color: white;
+	font-size: 
+	padding:6px 8px 2px 8px;
+	margin:6px;
+	display: inline-block;
+	text-align: center;
+	cursor:pointer;
+}
+
+#soonAlarmPre-dialog.floatpanel.dialog label {
+	text-align: right;
+	width: 100px;
 }
