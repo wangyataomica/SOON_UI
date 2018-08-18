@@ -5,7 +5,7 @@
 (function (){
     'use strict';
     //refs
-    var $log,$scope,$cookiesStore,wss,ds,ps;
+    var $log,$scope,$cookiesStore,wss,ps,fs,ks,ls,is;
     //states
     var datailsPanel,
         settingPanel,
@@ -24,8 +24,8 @@
         panelWidth = 540,
         detailsPanelName = 'alarm-details-panel',
         settingPanelName = 'alarm-setting-panel',
-        paraPanelName = 'alarm-modelPara-panel'
-        alarmReq = 'alarmDataRequest'
+        paraPanelName = 'alarm-modelPara-panel',
+        alarmReq = 'alarmDataRequest',
         alarmResp = 'alarmDataResponse',
         dialogId = 'app-dialog',
         dialogOpts = {
@@ -36,15 +36,15 @@
         soonView = 'alarm',
         propOrder = ['level','alarmSource','NEType','location','timeOccur','timeClear','timeConfirm','platformAlarm'],
         settingContentItem=['name','levelShow','regionShow'],
-        levelShow:['urgent','important','secondary','prompt'],
+        levelShow = ['urgent','important','secondary','prompt'],
         defaultSetting = {
             name:'default',
             levelShow:[true,true,true,true],
             regionShow: 'all',
         },
-        setting = {};
-        modelPara = {};
-        settingMenuSaved = [];
+        setting = {},
+        modelPara = {},
+        settingMenuSaved = [],
         ANNPara = ['NNIL','NNOL','NHL','learningRate']
 
 
@@ -202,7 +202,7 @@
 
         ANNPara.foreach(function(para){
             form.text(para+':').append('input').attr('type','text').classed('para-input',true).attr('id',soonView+para).append('br');
-        })
+        });
         return content;
     }
 
@@ -289,7 +289,7 @@
                 form.append('label').text(item+':'),append('input').attr('id',soonView+'regionShow').attr('type','text');
             }
             if(item === 'probabilityThreshold'){
-                form.append('label').text(item+':').append('input')..attr('id',soonView+'probabilityThreshold').attr('type','text');
+                form.append('label').text(item+':').append('input').attr('id',soonView+'probabilityThreshold').attr('type','text');
             }
             if(item === 'modelType'){
                 var select = form.append('label').text(item+':').append('select').attr('id',soonView+'modelType');
@@ -327,7 +327,7 @@
         settingGet = $cookiesStore.get(item);
         $('#alarmname').attr('value',settingGet[name]);
         $('#alarmprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
-        $('#alarmmodelType option[value=settingGet.modelType]').attr('selected',true);
+        $('#alarmmodelType').attr('selected',true);
         $('#alarmNNIL').attr('value',settingGet.modelPara.NNIL);
         $('#alarmNNOL').attr('value',settingGet.modelPara.NNOL);
         $('#alarmNHL').attr('value',settingGet.modelPara.NHL);
@@ -360,7 +360,7 @@
 
     angular.moudle('oVSoonAlarm'['ngCookies'])
     .controller('oVSoonAlarmCtrl',
-        ['$log', '$scope', '$http', '$timeout','cookiesStore'
+        ['$log', '$scope', '$http', '$timeout','cookiesStore',
          'WebSocketService', 'FnService', 'KeyService', 'PanelService',
          'IconService', 'UrlFnService', 'DialogService', 'TableBuilderService',
 
@@ -391,7 +391,7 @@
         tbs.buildTable({
             scope: $scope,
             tag: 'alarm',
-            sortParams {
+            sortParams: {
                 firstCol: 'timeOccur',
                 firstDir: 'asc',
                 secondCol: 'alarmSource',
@@ -414,18 +414,18 @@
         $scope.alarmShow = function(action){
             $scope.payload.query.alarmShow = action;
             sendDataReq($scope.payload);
-        }
+        };
 
-        $scope.alarmSettingShow(){
+        $scope.alarmSettingShow = function(){
             populateSettingPanel(settingMenuSaved);
             settingPanel.show();
-        }
+        };
 
         $scope.$on('$destroy',function(){
             ks.unbindKeys();
             wss.unbindHandlers();
             ds.closeDialog;
-        })
+        });
 
         Object.defineProperty($scope, 'queryFilter', {
             get: function () {
@@ -488,4 +488,4 @@
                 })
             }
     }])
-})
+});

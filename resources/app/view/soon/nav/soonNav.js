@@ -6,9 +6,6 @@
     'use strict';
 
     var $log,$location,$window;
-    var defaultSoonView = 'alarm';
-    function defaultView(){
-    }
     function soonNavTo(path){
         var url;
         if(!path){
@@ -22,14 +19,10 @@
 
     angular.module('ovSoonNav',[])
         .controller('OvSoonNavCtrl',
-            ['$log','$scope',function(_$log_,_$scope_){
+            ['$log','$scope',function(_$log_){
                 $log = _$log_;
-                $scope = _$scope_;
                 $log.log('SoonNavCtrl has been created');
-                $scope.defaultSoonView = function (){
-                    soonNavTo('alarm');
-                    }
-            },
+            }
         ])
         .factory('SoonNavService',['$log','$location','$window',
             function(_$log_,_$location_,_$window_){

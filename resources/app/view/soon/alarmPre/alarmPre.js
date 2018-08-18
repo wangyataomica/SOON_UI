@@ -5,7 +5,7 @@
 (function (){
     'use strict';
     //refs
-    var $log,$scope,$cookiesStore,wss,ds,ps;
+    var $log,$scope,$cookiesStore,wss,ps,fs,ks,ls,is;
     //states
     var datailsPanel,
         settingPanel,
@@ -290,7 +290,7 @@
                 }
             }
             if(item === 'probabilityThreshold'){
-                form.append('label').text(item+':').append('input')..attr('id',soonView+'probabilityThreshold').attr('type','text');
+                form.append('label').text(item+':').append('input').attr('id',soonView+'probabilityThreshold').attr('type','text');
             }
             if(item === 'modelType'){
                 var select = form.append('label').text(item+':').append('select').attr('id',soonView+'modelType');
@@ -317,7 +317,7 @@
         settingGet = $cookiesStore.get(item);
         $('#alarmPrename').attr('value',settingGet[name]);
         $('#alarmPreprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
-        $('#alarmPremodelType option[value=settingGet.modelType]').attr('selected',true);
+        $('#alarmPremodelType').attr('selected',true);
         $('#alarmPreNNIL').attr('value',settingGet.modelPara.NNIL);
         $('#alarmPreNNOL').attr('value',settingGet.modelPara.NNOL);
         $('#alarmPreNHL').attr('value',settingGet.modelPara.NHL);
@@ -350,7 +350,7 @@
 
     angular.moudle('oVSoonAlarmPre'['ngCookies'])
     .controller('oVSoonAlarmPreCtrl',
-        ['$log', '$scope', '$http', '$timeout','cookiesStore'
+        ['$log', '$scope', '$http', '$timeout','cookiesStore',
          'WebSocketService', 'FnService', 'KeyService', 'PanelService',
          'IconService', 'UrlFnService', 'DialogService', 'TableBuilderService',
 
@@ -381,7 +381,7 @@
         tbs.buildTable({
             scope: $scope,
             tag: 'alarmPre',
-            sortParams {
+            sortParams: {
                 firstCol: 'timeOccur',
                 firstDir: 'asc',
                 secondCol: 'alarmPreSource',
@@ -404,18 +404,18 @@
         $scope.alarmPreShow = function(action){
             $scope.payload.query.alarmPreShow = action;
             sendDataReq($scope.payload);
-        }
+        };
 
-        $scope.alarmPreSettingShow(){
+        $scope.alarmPreSettingShow = function(){
             populateSettingPanel(settingMenuSaved);
             settingPanel.show();
-        }
+        };
 
         $scope.$on('$destroy',function(){
             ks.unbindKeys();
             wss.unbindHandlers();
             ds.closeDialog;
-        })
+        });
 
         Object.defineProperty($scope, 'queryFilter', {
             get: function () {
@@ -466,7 +466,7 @@
                     function(){
                         return{
                             h: $window.innerHeight,
-                            w: $window.innerWidth,
+                            w: $window.innerWidth
                         };
                     }
                 );
@@ -478,4 +478,4 @@
                 })
             }
     }])
-})
+});
