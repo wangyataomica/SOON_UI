@@ -1,0 +1,93 @@
+<div id="ov-soon-alarm" filedrop on-file-drop="appDropped()">
+    <div class="tabular-header">;
+        <h2>
+            alarm
+        </h2>
+        <div class="ctrl-btns">
+            <div class="refresh" ng-class="{active: autoRefresh}"
+                 icon icon-size="42" icon-id="refresh"
+                 tooltip tt-msg="autoRefreshTip"
+                 ng-click="toggleRefresh()"></div>
+
+            <div class="separator"></div>
+
+            <form id="inputFileForm">
+                <input id="uploadFile"
+                       type="file" size="50" accept=".oar,.jar"
+                       file-model="appFile">
+            </form>
+
+            <div icon icon-size="42" icon-id="show"
+                 ng-click="alarmShow(true)"
+                 tooltip tt-msg="activateTip"
+                 ng-class="alarmShow">
+            </div>
+            <div icon icon-size="42" icon-id="stop"
+                 ng-click="alarmShow(false)"
+                 tooltip tt-msg="deactivateTip"
+                 ng-class="alarmShowStop">
+            </div>
+            <div icon icon-size="42" icon-id="setting"
+                 ng-click="alarmSettingShow()"
+                 tooltip tt-msg="settingTip"
+                 ng-class="alarmSetting">
+            </div>
+        </div>
+
+        <div class="search">
+            <input type="text" ng-model="queryTxt" placeholder="Search"/>
+            <select ng-model="queryBy">
+                <option value="" disabled>Search By</option>
+                <option value="$">All Fields</option>
+                <option value="timeOccur">timeOccur</option>
+                <option value="alarmSource">alarmSource</option>
+                <option value="timeFirstOccur">timeFirstOccur</option>
+                <option value="level">level</option>
+                <option value=""></option>
+
+            </select>
+        </div>
+
+
+    </div>
+
+    <div class="summary-list" onos-table-resize>
+        <div class="table-header" onos-sortable-header>
+            <table>
+                <tr>
+                    <td colId="timeOccur" sortable col-width="340"> timeOccur </td>
+                    <td colId="alarmSource" sortable col-width="320px"> alarmSource </td>
+                    <td colId="level" sortable col-width="140px"> level </td>
+                    <td colId="name" sortable col-width="140px"> name </td>
+                    <td colId="timeFirstOccur" sortable col-width="136px"> timeFirstOccur </td>
+                    <td colId="" sortable></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="table-body">
+            <table onos-flash-changes id-prop="id">
+                <tr ng-if="!tableData.length" class="no-data">
+                    <td colspan="5">
+                        {{annots.no_rows_msg}}
+                    </td>
+                </tr>
+
+                <tr ng-repeat="alarm in tableData | filter:queryFilter track by $index"
+                    ng-click="selectCallback($event, alarm)"
+                    ng-class="{selected: alarm.id === selId}"
+                    ng-repeat-complete row-id="{{alarm.id}}">
+                    <td>{{alarm.timeOccur}}</td>
+                    <td>{{alarm.alarmSource}}</td>
+                    <td>{{alarm.level}}</td>
+                    <td>{{alarm.name}}</td>
+                    <td>{{alarm.timeFirstOccur}}</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <alarm-details-panel></alarm-details-panel>
+
+</div>

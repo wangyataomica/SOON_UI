@@ -1,0 +1,57 @@
+/*
+ ONOS GUI -- SOON side Navigation --css file
+ */
+
+#soonNavigation div.soon-fixed-sidenav {
+    position:absolute;
+    top:48px;
+    left:0;
+    width:100%;
+    background-color:#f5f5f5;
+}
+#soonNavigation div.soon-fixed-sidenav-logocontainer {
+    margin-top:14px;
+    margin-bottom:10px;
+    overflow:hidden;
+    width:100%;
+}
+#soonNavigation div.soon-fixed-sidenav-logocontainer.soonLogo-img {
+    max-width:150px;
+    max-height:150px;
+    display:block;
+    border:0;
+    margin:auto;
+}
+#soonNavigation div.soon-fixed-sidenav.soon-fixed-sidenav-content-container {
+    margin:6px 8px;
+}
+#soon-navigation-item {
+    margin-left:10px;
+    list-style-type:disc;
+}
+#soon-navigation-item li.sidenav-content-itemcontainer {
+    width:auto;
+    margin-left:15px;
+}
+#soon-navigation-item li.sidenav-content-itemcontainer a{
+    white-space:nowrap;
+    display:inline-block;
+    padding-right:10px;
+}
+#soonNavigation div.soon-sidenav-border-container {
+    height:100%;
+    position:absolute;
+    top:48px;
+    right:-6px;
+    width:11px;
+    z-index:11;
+    cursor:col-resize;
+}
+#soonNavigation div.soon-sidenav-border {
+    position:absolute;
+    top:0;
+    left:4px;
+    bottom:0;
+    width:6px;
+    border-left:1px solid #ccc
+}

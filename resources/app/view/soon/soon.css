@@ -1,0 +1,11 @@
+/*
+ ONOS GUI -- SOON View --css file
+ */
+
+#ov-soon div.soon-left{
+    width:200px
+    display:block
+}
+#ov-soon div.soon-main {
+    margin-left:200px
+}
