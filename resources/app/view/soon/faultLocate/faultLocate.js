@@ -1,5 +1,5 @@
 /*
- ONOS GUI -- soonAlarm View Module
+ ONOS GUI -- soonfaultLocate View Module
  */
 
 (function (){
@@ -22,30 +22,34 @@
     //constants
     var topPdg = 60,
         panelWidth = 540,
-        detailsPanelName = 'alarm-details-panel',
-        settingPanelName = 'alarm-setting-panel',
-        paraPanelName = 'alarm-modelPara-panel',
-        alarmReq = 'alarmDataRequest',
-        alarmResp = 'alarmDataResponse',
+        detailsPanelName = 'faultLocate-details-panel',
+        settingPanelName = 'faultLocate-setting-panel',
+        paraPanelName = 'faultLocate-modelPara-panel',
+        faultLocateReq = 'faultLocateDataRequest',
+        faultLocateResp = 'faultLocateDataResponse',
         dialogId = 'app-dialog',
         dialogOpts = {
             edge:'right',
             width:400,
             height:1600,
         },
-        soonView = 'alarm',
-        propOrder = ['level','alarmSource','NEType','location','timeOccur','timeClear','timeConfirm','platformAlarm'],
-        settingContentItem=['name','levelShow','regionShow'],
-        levelShow = ['urgent','important','secondary','prompt'],
+        soonView = 'faultLocate',
+        propOrder = ['timeOccur','faultSource','probability','faultType'],
+        settingContentItem=['name','probabilityThreshold','modelType','modelPara'],
+        levelShow = [true,true,true,true],
         defaultSetting = {
             name:'default',
-            levelShow:[true,true,true,true],
-            regionShow: 'all',
+            levelShow:['urgent','important','secondary','prompt'],
+            probabilityThreshold:0.95,
+            modelType:'ANN',
+            modelPara:{
+
+            },
         },
         setting = {},
         modelPara = {},
         settingMenuSaved = [],
-        ANNPara = ['NNIL','NNOL','NHL','learningRate']
+        ANNPara = ['NNIL','NNOL','NHL','learningRate'];
 
 
     /*function createDetailsPanel() {
@@ -136,8 +140,8 @@
             }
         }
 
-        ndiv('alarm-name');
-        ndiv('right', 'alarm-props');
+        ndiv('faultLocate-name');
+        ndiv('right', 'faultLocate-props');
 
         container.append('hr');
     }*/
@@ -212,7 +216,7 @@
             $scope.modelPara = d3.select('.para-form').serializeArray();
         }
         function dCancel(){
-            $log.debug('Canceling',action,'of alarm')
+            $log.debug('Canceling',action,'of faultLocate')
         }
         ds.openDialog(dialogId,dialogOpts)
             .setTitle('model parameters config')
@@ -279,26 +283,17 @@
             if(item === 'name'){
                 form.append('label').text(item+':').append('input').attr('id',soonView+'name').attr('type','text');
             }
-            if(item === 'levelShow'){
-                var input = form.append('label').text(item+':');
-                for(var i=0;i<4;i++){
-                    input.append('input').attr('id',soonView+levelShow[i]).attr('type','checkbox').text(levelShow[i]);
-                }
+            if(item === 'probabilityThreshold'){
+                form.append('label').text(item+':').append('input').attr('id',soonView+'probabilityThreshold').attr('type','text');
             }
-            if(item === 'regionShow'){
-                form.append('label').text(item+':'),append('input').attr('id',soonView+'regionShow').attr('type','text');
-            } 
-    }
-
-    function populateContent(details){
-        var propsBody = content.select('.alarm-paops').append('tbody');
-
-        content.select('.alarm-name').text(details.name);
-
-        propOrder.foreach(function (prop,i){
-            addProp(propsBody,i,details[prop]);
-        });
-
+            if(item === 'modelType'){
+                var select = form.append('label').text(item+':').append('select').attr('id',soonView+'modelType');
+                select.append('option').attr('value','ANN').text('ANN');
+                select.append('option').attr('value','CNN').text('CNN');
+            }
+            if(item === 'modelPara'){
+                form.append('label').append('div').text('config model parameter').on('click',configModelPara);
+            }
     }
 
     function respDetailsCb(data) {
@@ -314,41 +309,41 @@
             settingGet = defaultSetting;
         }else{
         settingGet = $cookiesStore.get(item);
-        $('#alarmname').attr('value',settingGet[name]);
-        $('#alarmprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
-        $('#alarmmodelType').attr('selected',true);
-        $('#alarmNNIL').attr('value',settingGet.modelPara.NNIL);
-        $('#alarmNNOL').attr('value',settingGet.modelPara.NNOL);
-        $('#alarmNHL').attr('value',settingGet.modelPara.NHL);
-        $('#alarmlearningRate').attr('value',settingGet.modelPara.learningRate);
+        $('#faultLocatename').attr('value',settingGet[name]);
+        $('#faultLocateprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
+        $('#faultLocatemodelType').attr('selected',true);
+        $('#faultLocateNNIL').attr('value',settingGet.modelPara.NNIL);
+        $('#faultLocateNNOL').attr('value',settingGet.modelPara.NNOL);
+        $('#faultLocateNHL').attr('value',settingGet.modelPara.NHL);
+        $('#faultLocatelearningRate').attr('value',settingGet.modelPara.learningRate);
     }}
 
     function showLevelShowSetting(settingGet){
         if(settingGet.levelShow[0]){
-            $('#alarmurgent').attr('checked');
+            $('#faultLocateurgent').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmimportant').attr('checked');
+            $('#faultLocateimportant').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmsecondary').attr('checked');
+            $('#faultLocatesecondary').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmprompt').attr('checked');
+            $('#faultLocateprompt').attr('checked');
         }
     }
 
     function sendDataReq(payload){
         if(wss.isConnected()){
             if(fs.debugOn('table')){
-                $log.debug('Table data REQUEST:',alarmReq,payload);
+                $log.debug('Table data REQUEST:',faultLocateReq,payload);
             }
-            wss.sendEvent(alarmReq,payload);
+            wss.sendEvent(faultLocateReq,payload);
         }
     }
 
-    angular.moudle('oVSoonAlarm'['ngCookies'])
-    .controller('oVSoonAlarmCtrl',
+    angular.moudle('oVSoonfaultLocate'['ngCookies'])
+    .controller('oVSoonfaultLocateCtrl',
         ['$log', '$scope', '$http', '$timeout','cookiesStore',
          'WebSocketService', 'FnService', 'KeyService', 'PanelService',
          'IconService', 'UrlFnService', 'DialogService', 'TableBuilderService',
@@ -368,9 +363,9 @@
         $scope.modelPara = {};
         $scope.settingMenuSaved = new Array('default');
         $scope.payload = {};
-        $scope.refreshTip = 'refresh alarm information';
-        $scope.startTip = 'start show new alarm information';
-        $scope.stopTip = 'stop show new alarm information';
+        $scope.refreshTip = 'refresh faultLocate information';
+        $scope.startTip = 'start show new faultLocate information';
+        $scope.stopTip = 'stop show new faultLocate information';
 
         var handlers = {};
 
@@ -379,15 +374,15 @@
 
         tbs.buildTable({
             scope: $scope,
-            tag: 'alarm',
+            tag: 'faultLocate',
             sortParams: {
                 firstCol: 'timeOccur',
                 firstDir: 'asc',
-                secondCol: 'alarmSource',
+                secondCol: 'faultLocateSource',
                 secondDir: 'asc',
             },
             query: {
-                alarmShow: true,
+                faultLocateShow: true,
                 setting: $scope.setting,
             }
         });
@@ -395,17 +390,17 @@
         $scope.payload = {
             sortParams: $scope.sortParams,
             query: {
-                alarmShow: alarmShow,
+                faultLocateShow: faultLocateShow,
                 setting: $scope.setting,
             },
         };
 
-        $scope.alarmShow = function(action){
-            $scope.payload.query.alarmShow = action;
+        $scope.faultLocateShow = function(action){
+            $scope.payload.query.faultLocateShow = action;
             sendDataReq($scope.payload);
         };
 
-        $scope.alarmSettingShow = function(){
+        $scope.faultLocateSettingShow = function(){
             populateSettingPanel(settingMenuSaved);
             settingPanel.show();
         };
@@ -424,10 +419,10 @@
             },
         });
 
-        $log.log('oVSoonAlarmCtrl has been created');
+        $log.log('oVSoonfaultLocateCtrl has been created');
     }])
 
-    .directive('soonAlarmSettingPanel',
+    .directive('soonfaultLocateSettingPanel',
         ['$rootScope','$window','$timeout','KeyService',
         function($rootScope,$window,$timeout,ks){
             return function(scope){
@@ -465,7 +460,7 @@
                     function(){
                         return{
                             h: $window.innerHeight,
-                            w: $window.innerWidth,
+                            w: $window.innerWidth
                         };
                     }
                 );

@@ -1,0 +1,83 @@
+<div id="ov-soon-faultLocate" filedrop on-file-drop="appDropped()">
+    <div class="tabular-header">;
+        <h2>
+            faultLocate
+        </h2>
+        <div class="ctrl-btns">
+            <div class="refresh" ng-class="{active: autoRefresh}"
+                 icon icon-size="42" icon-id="refresh"
+                 tooltip tt-msg="autoRefreshTip"
+                 ng-click="toggleRefresh()"></div>
+
+            <div class="separator"></div>
+
+            <div icon icon-size="42" icon-id="show"
+                 ng-click="faultLocateShow(true)"
+                 tooltip tt-msg="activateTip"
+                 ng-class="faultLocateShow">
+            </div>
+            <div icon icon-size="42" icon-id="stop"
+                 ng-click="faultLocateShow(false)"
+                 tooltip tt-msg="deactivateTip"
+                 ng-class="faultLocateShowStop">
+            </div>
+            <div icon icon-size="42" icon-id="setting"
+                 ng-click="faultLocateSettingShow()"
+                 tooltip tt-msg="settingTip"
+                 ng-class="faultLocateSetting">
+            </div>
+        </div>
+
+        <div class="search">
+            <input type="text" ng-model="queryTxt" placeholder="Search"/>
+            <select ng-model="queryBy">
+                <option value="" disabled>Search By</option>
+                <option value="$">All Fields</option>
+                <option value="timeOccur">timeOccur</option>
+                <option value="faultSource">faultSource</option>
+                <option value="faultType">faultType</option>
+
+            </select>
+        </div>
+
+
+    </div>
+
+    <div class="summary-list" onos-table-resize>
+        <div class="table-header" onos-sortable-header>
+            <table>
+                <tr>
+                    <td colId="timeOccur" sortable col-width="340"> timeOccur </td>
+                    <td colId="faultSource" sortable col-width="320px"> faultLocateSource </td>
+                    <td colId="probability" sortable col-width="140px"> level </td>
+                    <td colId="faultType" sortable col-width="140px"> name </td>
+                    <td colId="" sortable></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="table-body">
+            <table onos-flash-changes id-prop="id">
+                <tr ng-if="!tableData.length" class="no-data">
+                    <td colspan="5">
+                        {{annots.no_rows_msg}}
+                    </td>
+                </tr>
+
+                <tr ng-repeat="faultLocate in tableData | filter:queryFilter track by $index"
+                    ng-click="selectCallback($event, faultLocate)"
+                    ng-class="{selected: faultLocate.id === selId}"
+                    ng-repeat-complete row-id="{{faultLocate.id}}">
+                    <td>{{faultLocate.timeOccur}}</td>
+                    <td>{{faultLocate.faultSource}}</td>
+                    <td>{{faultLocate.probability}}</td>
+                    <td>{{faultLocate.faultType}}</td>
+                </tr>
+            </table>
+        </div>
+
+    </div>
+
+    <faultLocate-setting-panel></faultLocate-setting-panel>
+
+</div>
