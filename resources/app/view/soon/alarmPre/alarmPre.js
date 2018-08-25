@@ -337,8 +337,8 @@
         }
     }
 
-    angular.moudle('oVSoonAlarmPre',['ngCookies'])
-    .controller('oVSoonAlarmPreCtrl',
+    angular.moudle('ovSoonAlarmPre',['ngCookies'])
+    .controller('OvSoonAlarmPreCtrl',
         ['$log', '$scope', '$http', '$timeout','cookiesStore',
          'WebSocketService', 'FnService', 'KeyService', 'PanelService',
          'IconService', 'UrlFnService', 'DialogService', 'TableBuilderService',
