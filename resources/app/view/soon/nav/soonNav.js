@@ -31,7 +31,7 @@
                 $window = _$window_;
 
                 return {
-                    soonNavTo:soonNavTo,
+                    soonNavTo:soonNavTo
                 };
             }]
         );

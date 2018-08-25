@@ -11,7 +11,7 @@
 	//
 	var defaultSoonView = 'soon/alarmPre',
 		soonViewId = ['alarm','alarmPre','faultLocate','MLModel','traffic','serviceReroute'],
-		soonModuleDependencies = [ngRoute,ovSoonAlarmPre];
+		soonModuleDependencies = ['ngRoute','ovSoonAlarmPre'];
 
     function cap(s) {
         return s ? s[0].toUpperCase() + s.slice(1) : s;
@@ -58,6 +58,6 @@
 				});
 			}
 		});
-	}])
+	}]);
 
-});
+}());
