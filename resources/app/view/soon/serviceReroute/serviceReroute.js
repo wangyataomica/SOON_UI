@@ -1,5 +1,5 @@
 /*
- ONOS GUI -- soonAlarmPre View Module
+ ONOS GUI -- soonserviceReroute View Module
  */
 
 (function (){
@@ -7,7 +7,8 @@
     //refs
     var $log,$scope,$cookiesStore,wss,ps,fs,ks,ls,is;
     //states
-    var settingPanel,
+    var datailsPanel,
+        settingPanel,
         pHeight,
         pStartY,
         content,
@@ -21,24 +22,24 @@
     //constants
     var topPdg = 60,
         panelWidth = 540,
-        detailsPanelName = 'alarmPre-details-panel',
-        settingPanelName = 'alarmPre-setting-panel',
-        paraPanelName = 'alarmPre-modelPara-panel',
-        alarmPreReq = 'alarmPreDataRequest',
-        alarmPreResp = 'alarmPreDataResponse',
+        detailsPanelName = 'serviceReroute-details-panel',
+        settingPanelName = 'serviceReroute-setting-panel',
+        paraPanelName = 'serviceReroute-modelPara-panel',
+        serviceRerouteReq = 'serviceRerouteDataRequest',
+        serviceRerouteResp = 'serviceRerouteDataResponse',
         dialogId = 'app-dialog',
         dialogOpts = {
             edge:'right',
             width:400,
             height:1600,
         },
-        soonView = 'alarmPre',
-        settingContentItem=['name','levelShow','probabilityThreshold','modelType','modelPara'],
+        soonView = 'serviceReroute',
+        propOrder = ['timeOccur','type','srvice','blockRate'],
+        settingContentItem=['name','blockRateThreshold','modelType','modelPara'],
         levelShow = [true,true,true,true],
         defaultSetting = {
             name:'default',
-            levelShow:['urgent','important','secondary','prompt'],
-            probabilityThreshold:0.95,
+            blockRateThreshold:0.1,
             modelType:'ANN',
             modelPara:{
 
@@ -88,6 +89,15 @@
         return false;
     }
 
+    function closeParaPanel(){
+        if (paraPanel.isVisible()) {
+            $scope.selId = null;
+            paraPanel.hide();
+            return true;
+        }
+        return false;
+    }
+
     function addSettingCloseBtn(div) {
         is.loadEmbeddedIcon(div, 'close', 26);
         div.on('click', closeSettingPanel);
@@ -129,8 +139,8 @@
             }
         }
 
-        ndiv('alarmPre-name');
-        ndiv('right', 'alarmPre-props');
+        ndiv('serviceReroute-name');
+        ndiv('right', 'serviceReroute-props');
 
         container.append('hr');
     }*/
@@ -205,7 +215,7 @@
             $scope.modelPara = d3.select('.para-form').serializeArray();
         }
         function dCancel(){
-            $log.debug('Canceling',action,'of alarmPre');
+            $log.debug('Canceling',action,'of serviceReroute')
         }
         ds.openDialog(dialogId,dialogOpts)
             .setTitle('model parameters config')
@@ -272,13 +282,7 @@
             if(item === 'name'){
                 form.append('label').text(item+':').append('input').attr('id',soonView+'name').attr('type','text');
             }
-            if(item === 'levelShow'){
-                var input = form.append('label').text(item+':');
-                for(var i=0;i<4;i++){
-                    input.append('input').attr('id',soonView+levelShow[i]).attr('type','checkbox').text(levelShow[i]);
-                }
-            }
-            if(item === 'probabilityThreshold'){
+            if(item === 'blockRateThreshold'){
                 form.append('label').text(item+':').append('input').attr('id',soonView+'probabilityThreshold').attr('type','text');
             }
             if(item === 'modelType'){
@@ -304,41 +308,41 @@
             settingGet = defaultSetting;
         }else{
         settingGet = $cookiesStore.get(item);
-        $('#alarmPrename').attr('value',settingGet[name]);
-        $('#alarmPreprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
-        $('#alarmPremodelType').attr('selected',true);
-        $('#alarmPreNNIL').attr('value',settingGet.modelPara.NNIL);
-        $('#alarmPreNNOL').attr('value',settingGet.modelPara.NNOL);
-        $('#alarmPreNHL').attr('value',settingGet.modelPara.NHL);
-        $('#alarmPrelearningRate').attr('value',settingGet.modelPara.learningRate);
+        $('#serviceReroutename').attr('value',settingGet[name]);
+        $('#serviceRerouteprobabilityThreshold').attr('value',settingGet[probabilityThreshold]);
+        $('#serviceReroutemodelType').attr('selected',true);
+        $('#serviceRerouteNNIL').attr('value',settingGet.modelPara.NNIL);
+        $('#serviceRerouteNNOL').attr('value',settingGet.modelPara.NNOL);
+        $('#serviceRerouteNHL').attr('value',settingGet.modelPara.NHL);
+        $('#serviceReroutelearningRate').attr('value',settingGet.modelPara.learningRate);
     }}
 
     function showLevelShowSetting(settingGet){
         if(settingGet.levelShow[0]){
-            $('#alarmPreurgent').attr('checked');
+            $('#serviceRerouteurgent').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmPreimportant').attr('checked');
+            $('#serviceRerouteimportant').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmPresecondary').attr('checked');
+            $('#serviceReroutesecondary').attr('checked');
         }
         if(settingGet.levelShow[0]){
-            $('#alarmPreprompt').attr('checked');
+            $('#serviceRerouteprompt').attr('checked');
         }
     }
 
     function sendDataReq(payload){
         if(wss.isConnected()){
             if(fs.debugOn('table')){
-                $log.debug('Table data REQUEST:',alarmPreReq,payload);
+                $log.debug('Table data REQUEST:',serviceRerouteReq,payload);
             }
-            wss.sendEvent(alarmPreReq,payload);
+            wss.sendEvent(serviceRerouteReq,payload);
         }
     }
 
-    angular.moudle('oVSoonAlarmPre',['ngCookies'])
-    .controller('oVSoonAlarmPreCtrl',
+    angular.moudle('oVSoonserviceReroute'['ngCookies'])
+    .controller('oVSoonserviceRerouteCtrl',
         ['$log', '$scope', '$http', '$timeout','cookiesStore',
          'WebSocketService', 'FnService', 'KeyService', 'PanelService',
          'IconService', 'UrlFnService', 'DialogService', 'TableBuilderService',
@@ -358,9 +362,9 @@
         $scope.modelPara = {};
         $scope.settingMenuSaved = new Array('default');
         $scope.payload = {};
-        $scope.refreshTip = 'refresh alarmPre information';
-        $scope.startTip = 'start show new alarmPre information';
-        $scope.stopTip = 'stop show new alarmPre information';
+        $scope.refreshTip = 'refresh serviceReroute information';
+        $scope.startTip = 'start show new serviceReroute information';
+        $scope.stopTip = 'stop show new serviceReroute information';
 
         var handlers = {};
 
@@ -369,15 +373,15 @@
 
         tbs.buildTable({
             scope: $scope,
-            tag: 'alarmPre',
+            tag: 'serviceReroute',
             sortParams: {
                 firstCol: 'timeOccur',
                 firstDir: 'asc',
-                secondCol: 'alarmPreSource',
+                secondCol: 'serviceRerouteSource',
                 secondDir: 'asc',
             },
             query: {
-                alarmPreShow: true,
+                serviceRerouteShow: true,
                 setting: $scope.setting,
             }
         });
@@ -385,17 +389,17 @@
         $scope.payload = {
             sortParams: $scope.sortParams,
             query: {
-                alarmPreShow: alarmPreShow,
+                serviceRerouteShow: serviceRerouteShow,
                 setting: $scope.setting,
             },
         };
 
-        $scope.alarmPreShow = function(action){
-            $scope.payload.query.alarmPreShow = action;
+        $scope.serviceRerouteShow = function(action){
+            $scope.payload.query.serviceRerouteShow = action;
             sendDataReq($scope.payload);
         };
 
-        $scope.alarmPreSettingShow = function(){
+        $scope.serviceRerouteSettingShow = function(){
             populateSettingPanel(settingMenuSaved);
             settingPanel.show();
         };
@@ -414,10 +418,10 @@
             },
         });
 
-        $log.log('oVSoonAlarmPreCtrl has been created');
+        $log.log('oVSoonserviceRerouteCtrl has been created');
     }])
 
-    .directive('soonAlarmPreSettingPanel',
+    .directive('soonserviceRerouteSettingPanel',
         ['$rootScope','$window','$timeout','KeyService',
         function($rootScope,$window,$timeout,ks){
             return function(scope){
@@ -466,5 +470,5 @@
                     ds.destroyPanel(settingPanelName);
                 })
             }
-    }]);
-}());
+    }])
+});

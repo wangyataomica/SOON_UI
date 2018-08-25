@@ -1,7 +1,7 @@
-<div id="ov-soon-alarmPre">
-    <div class="tabular-header">
+<div id="ov-soon-serviceReroute" filedrop on-file-drop="appDropped()">
+    <div class="tabular-header">;
         <h2>
-            alarmPre
+            serviceReroute
         </h2>
         <div class="ctrl-btns">
             <div class="refresh" ng-class="{active: autoRefresh}"
@@ -12,19 +12,19 @@
             <div class="separator"></div>
 
             <div icon icon-size="42" icon-id="show"
-                 ng-click="alarmPreShow(true)"
+                 ng-click="serviceRerouteShow(true)"
                  tooltip tt-msg="activateTip"
-                 ng-class="alarmPreShow">
+                 ng-class="serviceRerouteShow">
             </div>
             <div icon icon-size="42" icon-id="stop"
-                 ng-click="alarmPreShow(false)"
+                 ng-click="serviceRerouteShow(false)"
                  tooltip tt-msg="deactivateTip"
-                 ng-class="alarmPreShowStop">
+                 ng-class="serviceRerouteShowStop">
             </div>
             <div icon icon-size="42" icon-id="setting"
-                 ng-click="alarmPreSettingShow()"
+                 ng-click="serviceRerouteSettingShow()"
                  tooltip tt-msg="settingTip"
-                 ng-class="alarmPreSetting">
+                 ng-class="serviceRerouteSetting">
             </div>
         </div>
 
@@ -34,9 +34,8 @@
                 <option value="" disabled>Search By</option>
                 <option value="$">All Fields</option>
                 <option value="timeOccur">timeOccur</option>
-                <option value="alarmPreSource">alarmPreSource</option>
-                <option value="timeFirstOccur">timeFirstOccur</option>
-                <option value="level">level</option>
+                <option value="type">type</option>
+                <option value="blockRate">blockRate</option>
 
             </select>
         </div>
@@ -49,10 +48,10 @@
             <table>
                 <tr>
                     <td colId="timeOccur" sortable col-width="340"> timeOccur </td>
-                    <td colId="alarmPreSource" sortable col-width="320px"> alarmPreSource </td>
-                    <td colId="level" col-width="140px"> level </td>
-                    <td colId="name" col-width="140px"> name </td>
-                    <td colId="timeFirstOccur" col-width="136px"> timeFirstOccur </td>
+                    <td colId="type" sortable col-width="320px"> serviceRerouteSource </td>
+                    <td colId="service" sortable col-width="140px"> level </td>
+                    <td colId="blockRate" sortable col-width="140px"> name </td>
+                    <td colId="" sortable></td>
                 </tr>
             </table>
         </div>
@@ -65,21 +64,20 @@
                     </td>
                 </tr>
 
-                <tr ng-repeat="alarmPre in tableData | filter:queryFilter track by $index"
-                    ng-click="selectCallback($event, alarmPre)"
-                    ng-class="{selected: alarmPre.id === selId}"
-                    ng-repeat-complete row-id="{{alarmPre.id}}">
-                    <td>{{alarmPre.timeOccur}}</td>
-                    <td>{{alarmPre.alarmPreSource}}</td>
-                    <td>{{alarmPre.level}}</td>
-                    <td>{{alarmPre.name}}</td>
-                    <td>{{alarmPre.timeFirstOccur}}</td>
+                <tr ng-repeat="serviceReroute in tableData | filter:queryFilter track by $index"
+                    ng-click="selectCallback($event, serviceReroute)"
+                    ng-class="{selected: serviceReroute.id === selId}"
+                    ng-repeat-complete row-id="{{serviceReroute.id}}">
+                    <td>{{serviceReroute.timeOccur}}</td>
+                    <td>{{serviceReroute.type}}</td>
+                    <td>{{serviceReroute.service}}</td>
+                    <td>{{serviceReroute.blockRate}}</td>
                 </tr>
             </table>
         </div>
 
     </div>
 
-    <alarmPre-setting-panel></alarmPre-setting-panel>
+    <serviceReroute-setting-panel></serviceReroute-setting-panel>
 
 </div>
